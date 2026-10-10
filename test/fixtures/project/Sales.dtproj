@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <DeploymentModel>Project</DeploymentModel>
+  <DeploymentModelSpecificContent>
+    <Manifest>
+      <SSIS:Project SSIS:ProtectionLevel="DontSaveSensitive" xmlns:SSIS="www.microsoft.com/SqlServer/SSIS">
+        <SSIS:Properties>
+          <SSIS:Property SSIS:Name="Name">Sales</SSIS:Property>
+        </SSIS:Properties>
+        <SSIS:Packages>
+          <SSIS:Package SSIS:Name="LoadSales.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="MergeSales.dtsx" SSIS:EntryPoint="1" />
+        </SSIS:Packages>
+      </SSIS:Project>
+    </Manifest>
+  </DeploymentModelSpecificContent>
+</Project>

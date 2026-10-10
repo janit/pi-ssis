@@ -1,0 +1,29 @@
+<?xml version="1.0"?><DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts" DTS:ExecutableType="SSIS.Package.2">
+<DTS:Property DTS:Name="PackageFormatVersion">3</DTS:Property>
+<DTS:ConnectionManager>
+<DTS:Property DTS:Name="ObjectName">Legacy</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{BBBBBBBB-0000-0000-0000-000000000001}</DTS:Property>
+<DTS:Property DTS:Name="CreationName">OLEDB</DTS:Property><DTS:ObjectData><DTS:ConnectionManager>
+<DTS:Property DTS:Name="ConnectionString">Data Source=old;Initial Catalog=Legacy;Provider=SQLNCLI10;</DTS:Property></DTS:ConnectionManager></DTS:ObjectData></DTS:ConnectionManager>
+<DTS:Configuration>
+<DTS:Property DTS:Name="ConfigurationType">1</DTS:Property>
+<DTS:Property DTS:Name="ConfigurationString">C:\config\legacy.dtsConfig</DTS:Property>
+<DTS:Property DTS:Name="ObjectName">FileConfig</DTS:Property></DTS:Configuration>
+<DTS:Variable>
+<DTS:Property DTS:Name="Namespace">User</DTS:Property>
+<DTS:Property DTS:Name="ObjectName">BatchId</DTS:Property><DTS:VariableValue DTS:DataType="3">7</DTS:VariableValue></DTS:Variable>
+<DTS:Executable DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" DTS:ThreadHint="0">
+<DTS:Property DTS:Name="Disabled">0</DTS:Property>
+<DTS:Property DTS:Name="ObjectName">First</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{BBBBBBBB-0000-0000-0000-000000000002}</DTS:Property><DTS:ObjectData><SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" SQLTask:Connection="{BBBBBBBB-0000-0000-0000-000000000001}" SQLTask:SqlStatementSource="EXEC dbo.StartBatch ?"><SQLTask:ParameterBinding SQLTask:ParameterName="0" SQLTask:DtsVariableName="User::BatchId" SQLTask:ParameterDirection="Input" SQLTask:DataType="3" SQLTask:ParameterSize="-1"/></SQLTask:SqlTaskData></DTS:ObjectData></DTS:Executable>
+<DTS:Executable DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" DTS:ThreadHint="0">
+<DTS:Property DTS:Name="ObjectName">Second</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{BBBBBBBB-0000-0000-0000-000000000003}</DTS:Property><DTS:ObjectData><SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" SQLTask:Connection="{BBBBBBBB-0000-0000-0000-000000000001}" SQLTask:SqlStatementSource="EXEC dbo.EndBatch"/></DTS:ObjectData></DTS:Executable>
+<DTS:PrecedenceConstraint>
+<DTS:Property DTS:Name="Value">2</DTS:Property>
+<DTS:Property DTS:Name="EvalOp">2</DTS:Property>
+<DTS:Property DTS:Name="LogicalAnd">-1</DTS:Property>
+<DTS:Property DTS:Name="Expression"></DTS:Property><DTS:Executable IDREF="{BBBBBBBB-0000-0000-0000-000000000002}" DTS:IsFrom="-1"/><DTS:Executable IDREF="{BBBBBBBB-0000-0000-0000-000000000003}" DTS:IsFrom="0"/>
+<DTS:Property DTS:Name="ObjectName">Constraint</DTS:Property></DTS:PrecedenceConstraint>
+<DTS:Property DTS:Name="ObjectName">Legacy2008</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{BBBBBBBB-0000-0000-0000-000000000004}</DTS:Property></DTS:Executable>

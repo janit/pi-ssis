@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationName="Microsoft.Package"
+  DTS:DTSID="{AAAAAAAA-0000-0000-0000-000000000001}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:ObjectName="MergeSales"
+  DTS:ProtectionLevel="0">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:DTSID="{AAAAAAAA-0000-0000-0000-000000000002}"
+      DTS:ObjectName="RowsLoaded">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">0</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Merge into fact"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{AAAAAAAA-0000-0000-0000-000000000003}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Merge into fact"
+      DTS:TransactionOption="2">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{88888888-0000-0000-0000-000000000001}"
+          SQLTask:SqlStatementSource="MERGE dbo.FactSales AS t USING stg.Sales AS s ON t.OrderId = s.OrderId&#xA;WHEN MATCHED THEN UPDATE SET t.Amount = s.Amount&#xA;WHEN NOT MATCHED THEN INSERT (OrderId, Amount) VALUES (s.OrderId, s.Amount);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+</DTS:Executable>
