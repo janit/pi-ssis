@@ -185,6 +185,10 @@ const setSql: Handler<"set_sql"> = (op, ctx) => {
 	if (sourceType && sourceType !== "DirectInput") {
 		ctx.notes.push(`This task reads its statement from a ${sourceType}; the value you set is the name of that source, not SQL text.`);
 	}
+	const resultType = (attr(data, "ResultType") ?? "ResultSetType_None").replace("ResultSetType_", "");
+	if (resultType !== "None") {
+		ctx.notes.push(`This task stores a ${resultType} result in variables; the new statement must still return that result or the task fails at run time.`);
+	}
 	return setAttr(ctx.source, data, `${data.prefix ? `${data.prefix}:` : ""}SqlStatementSource`, op.sql);
 };
 
@@ -578,6 +582,38 @@ const HANDLERS: { [K in EditOp["op"]]: Handler<K> } = {
 };
 
 export const EDIT_OPS = Object.keys(HANDLERS) as EditOp["op"][];
+
+/** Fields each operation needs, for callers that receive loosely typed input. */
+const REQUIRED: Record<EditOp["op"], string[]> = {
+	set_sql: ["target", "sql"],
+	set_property: ["target", "property", "value"],
+	set_connection_string: ["connection", "value"],
+	set_expression: ["target", "property"],
+	set_disabled: ["target", "disabled"],
+	add_variable: ["name"],
+	remove_variable: ["name"],
+	rename_variable: ["name", "newName"],
+	add_parameter: ["name"],
+	remove_parameter: ["name"],
+	rename_parameter: ["name", "newName"],
+	add_execute_sql_task: ["name", "connection", "sql"],
+	add_constraint: ["from", "to"],
+	remove_constraint: ["from", "to"],
+};
+
+/** Checks untyped operations (e.g. from a model's tool call) and narrows them to EditOp. */
+export function checkOps(ops: unknown[]): EditOp[] {
+	if (!ops.length) throw new EditError("No operations given.");
+	return ops.map((raw, i) => {
+		const op = raw as Record<string, unknown>;
+		const label = ops.length > 1 ? `Operation ${i + 1}` : "Operation";
+		const name = String(op?.op ?? "");
+		if (!(name in REQUIRED)) throw new EditError(`${label}: unknown op "${name}". Supported: ${EDIT_OPS.join(", ")}`);
+		const missing = REQUIRED[name as EditOp["op"]].filter((f) => op[f] === undefined || op[f] === null);
+		if (missing.length) throw new EditError(`${label} (${name}) is missing: ${missing.join(", ")}`);
+		return op as unknown as EditOp;
+	});
+}
 
 export interface EditResult {
 	source: string;

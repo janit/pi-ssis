@@ -33,7 +33,9 @@ function diff(a: string, b: string): [string[], string[]] {
 describe("applyEdits", () => {
 	it("changes Execute SQL text and touches only that line", () => {
 		const sql = `DELETE FROM stg.Sales WHERE Loaded < '2025-01-01' AND Note = "x";\nSELECT 1 AS Remaining;`;
-		const { source, pkg } = edit([{ op: "set_sql", target: "Truncate staging", sql }]);
+		const { source, pkg, notes } = edit([{ op: "set_sql", target: "Truncate staging", sql }]);
+		expect(notes).toEqual([expect.stringMatching(/stores a SingleRow result in variables/)]);
+		expect(edit([{ op: "set_sql", target: "Log error", sql: "etl.LogError2" }]).notes).toEqual([]);
 		expect(findExecutable(pkg, "Truncate staging")!.sql!.statement).toBe(sql);
 		const [removed, added] = diff(original, source);
 		expect(removed).toHaveLength(1);
